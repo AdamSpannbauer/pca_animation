@@ -1,0 +1,25 @@
+{
+  "name": "pca_animation",
+  "version": "1.0.0",
+  "description": "An interactive animation to demonstrate the process of Principal Components Analysis",
+  "main": "sketch.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AdamSpannbauer/pca_animation.git"
+  },
+  "author": "Adam Spannbauer",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/AdamSpannbauer/pca_animation/issues"
+  },
+  "homepage": "https://github.com/AdamSpannbauer/pca_animation#readme",
+  "devDependencies": {
+    "eslint": "^7.13.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-config-p5js": "^1.0.1",
+    "eslint-plugin-import": "^2.22.1"
+  }
+}
