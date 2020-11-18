@@ -30,6 +30,7 @@ let maxY;
 
 // UI elements
 let playPauseBtn;
+let pauseAfterStepCheckbox;
 
 function labelStep(txt) {
   push();
@@ -54,6 +55,8 @@ function setup() {
   createCanvas(canvasW, canvasH);
   playPauseBtn = createButton('Pause');
   playPauseBtn.mousePressed(playPause);
+
+  pauseAfterStepCheckbox = createCheckbox('Pause after each step', true);
 
   [data, centeredData] = genData2d();
   covarianceMatrix = matUtils.covarianceMatrix2d(centeredData);
@@ -127,7 +130,7 @@ function draw() {
     if (frameCount >= centeringFrames) {
       state = 'ellipse';
       currAngle = deltaAngle;
-      playPause();
+      if (pauseAfterStepCheckbox.checked()) playPause();
     }
   } else if (state === 'rotating' || state === 'ellipse') {
     push();
@@ -150,11 +153,11 @@ function draw() {
     if (state === 'ellipse') {
       labelStep('Identifying Axes');
       state = 'rotating';
-      playPause();
+      if (pauseAfterStepCheckbox.checked()) playPause();
     } else if (state === 'rotating' && abs(currAngle) <= angleSpeed) {
       labelStep('Rotating');
       state = 'projected_data';
-      playPause();
+      if (pauseAfterStepCheckbox.checked()) playPause();
     } else {
       labelStep('Rotating');
     }
