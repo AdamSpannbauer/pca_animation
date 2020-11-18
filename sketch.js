@@ -24,11 +24,36 @@ let currAngle = 0;
 const angleSpeed = Math.PI / 1000;
 let angleVel;
 
+// Cheating on drawing ellipse axes diams
 let maxX;
 let maxY;
 
+// UI elements
+let playPauseBtn;
+
+function labelStep(txt) {
+  push();
+  scale(1, -1);
+  fill(0);
+  stroke(0);
+  text(txt, -width / 2 + textSize() * 0.01, -height / 2 + textSize() * 1.01);
+  pop();
+}
+
+function playPause() {
+  if (playPauseBtn.html() === 'Pause') {
+    playPauseBtn.html('Play');
+    noLoop();
+  } else {
+    playPauseBtn.html('Pause');
+    loop();
+  }
+}
+
 function setup() {
   createCanvas(canvasW, canvasH);
+  playPauseBtn = createButton('Pause');
+  playPauseBtn.mousePressed(playPause);
 
   [data, centeredData] = genData2d();
   covarianceMatrix = matUtils.covarianceMatrix2d(centeredData);
@@ -65,6 +90,11 @@ function setup() {
 
 let dataStep;
 const centeringFrames = 100;
+
+// possible states:
+// ['centering', 'ellipse', 'rotating', 'projected_data', 'projecting', 'reduced_data']
+
+let state = 'centering';
 function draw() {
   background(200);
 
@@ -73,13 +103,16 @@ function draw() {
   translate(width / 2, height / 2);
   scale(1, -1);
 
+  textSize(30);
   fill(255, 100);
 
   plotUtils.drawAxes();
 
   let start;
   let end;
-  if (frameCount <= centeringFrames) {
+
+  if (state === 'centering') {
+    labelStep('Centering');
     start = 0;
     end = centeringFrames;
 
@@ -91,7 +124,12 @@ function draw() {
       end,
     );
     plotUtils.plot2d(dataStep);
-  } else if (abs(currAngle) >= angleSpeed) {
+    if (frameCount >= centeringFrames) {
+      state = 'ellipse';
+      currAngle = deltaAngle;
+      playPause();
+    }
+  } else if (state === 'rotating' || state === 'ellipse') {
     push();
     rotate(currAngle);
 
@@ -108,7 +146,20 @@ function draw() {
 
     currAngle += angleVel;
     pop();
-  } else {
+
+    if (state === 'ellipse') {
+      labelStep('Identifying Axes');
+      state = 'rotating';
+      playPause();
+    } else if (state === 'rotating' && abs(currAngle) <= angleSpeed) {
+      labelStep('Rotating');
+      state = 'projected_data';
+      playPause();
+    } else {
+      labelStep('Rotating');
+    }
+  } else if (state === 'projected_data') {
+    labelStep('Data plotted on\n"Principal Axes"');
     plotUtils.plot2d(projectedData);
   }
 
