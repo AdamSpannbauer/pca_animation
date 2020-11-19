@@ -9,7 +9,7 @@ function genData2d(nRows) {
 
   const safeNRows = nRows || 10;
 
-  const output = new Array(safeNRows);
+  let output = new Array(safeNRows);
   let xSum = 0;
   let ySum = 0;
 
@@ -28,6 +28,8 @@ function genData2d(nRows) {
     output[r][0] = xVal;
     output[r][1] = yVal;
   }
+
+  output = output.sort((x1, x2) => x2[0] - x1[0]);
 
   const xMean = xSum / safeNRows;
   const yMean = ySum / safeNRows;

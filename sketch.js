@@ -32,12 +32,32 @@ let maxY;
 let playPauseBtn;
 let pauseAfterStepCheckbox;
 
+const myFontPath = './assets/MostlyMono.ttf';
+let myFont;
+
+let dataTableX;
+let dataTableY;
+const dataTableFontSize = 15;
+
+const viridisPallete10 = [
+  '#440154',
+  '#461d6d',
+  '#433880',
+  '#3b518b',
+  '#31678d',
+  '#287c8e',
+  '#21918d',
+  '#25a584',
+  '#3cb875',
+  '#61c960',
+];
+
 function labelStep(txt) {
   push();
   scale(1, -1);
   fill(0);
-  stroke(0);
-  text(txt, -width / 2 + textSize() * 0.01, -height / 2 + textSize() * 1.01);
+  noStroke();
+  text(txt, -width / 2 + textSize() * 0.5, -height / 2 + textSize() * 1.5);
   pop();
 }
 
@@ -51,8 +71,45 @@ function playPause() {
   }
 }
 
+function displayTable2d(tbl, x, y, pallete) {
+  push();
+  const vGap = textSize() * 1.5;
+  const hGap = textWidth('000.00') + textSize() * 1.1;
+
+  const w = hGap * 2;
+  const h = vGap * tbl.length;
+  rect(x + hGap / 4, y - textSize(), w, h);
+
+  textAlign(RIGHT);
+
+  const colors = pallete || viridisPallete10;
+
+  let i = 0;
+  let yi = y;
+  tbl.forEach((row) => {
+    yi = y + i * vGap;
+    const v1 = row[0].toFixed(2);
+    noStroke(0);
+    fill(colors[i]);
+    text(v1, x + hGap, yi);
+    text(row[1].toFixed(2), x + hGap * 2, yi);
+
+    i += 1;
+  });
+  pop();
+}
+
+function preload() {
+  myFont = loadFont(myFontPath);
+}
+
 function setup() {
   createCanvas(canvasW, canvasH);
+  textFont(myFont);
+
+  dataTableX = -width / 2 - 10;
+  dataTableY = dataTableFontSize * 2;
+
   playPauseBtn = createButton('Pause');
   playPauseBtn.mousePressed(playPause);
 
@@ -127,6 +184,12 @@ function draw() {
       end,
     );
     plotUtils.plot2d(dataStep);
+
+    push();
+    scale(1, -1);
+    textSize(dataTableFontSize);
+    displayTable2d(dataStep, dataTableX, dataTableY);
+    pop();
     if (frameCount >= centeringFrames) {
       state = 'ellipse';
       currAngle = deltaAngle;
@@ -143,6 +206,8 @@ function draw() {
 
     const diamX = maxX * 2.5;
     const diamY = maxY * 2.5;
+    noFill();
+    stroke('#fde725');
     ellipse(0, 0, diamX, diamY);
     line(-diamX / 2, 0, diamX / 2, 0);
     line(0, -diamY / 2, 0, diamY / 2);
@@ -150,6 +215,15 @@ function draw() {
     currAngle += angleVel;
     pop();
 
+    push();
+    scale(1, -1);
+    textSize(dataTableFontSize);
+    const rotMat = [
+      [cos(-currAngle), -sin(-currAngle)],
+      [sin(-currAngle), cos(-currAngle)],
+    ];
+    displayTable2d(matUtils.matMul(projectedData, rotMat), dataTableX, dataTableY);
+    pop();
     if (state === 'ellipse') {
       labelStep('Identifying Axes');
       state = 'rotating';
@@ -162,7 +236,7 @@ function draw() {
       labelStep('Rotating');
     }
   } else if (state === 'projected_data') {
-    labelStep('Data plotted on\n"Principal Axes"');
+    labelStep('Data plotted on\n\'Principal Axes\'');
     plotUtils.plot2d(projectedData);
   }
 
@@ -171,3 +245,4 @@ function draw() {
 
 window.setup = setup;
 window.draw = draw;
+window.preload = preload;
