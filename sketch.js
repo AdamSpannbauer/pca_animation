@@ -344,19 +344,18 @@ function draw() {
 
     plotUtils.plot2d(dataStep);
 
-    strokeWeight(3);
-    stroke(255, 0, 0);
-
-    const diamX = maxX * 2.5;
-    const diamY = maxY * 2.5;
     noFill();
     rotate(currAngle);
+    strokeWeight(5);
     stroke(viridisPallete10[viridisPallete10.length - 6]);
-    line(0, -diamY / 2, 0, diamY / 2);
+    line(0, 0, 0, eigVals[1] * width);
     stroke(viridisPallete10[viridisPallete10.length - 3]);
-    line(-diamX / 2, 0, diamX / 2, 0);
+    line(0, 0, eigVals[0] * width, 0);
+    strokeWeight(3);
     stroke('#fde7254D');
-    ellipse(0, 0, diamX, diamY);
+    const diamX = maxX * 2.5;
+    const diamY = maxY * 2.5;
+    ellipse(0, 0, max([eigVals[0] * width * 2, diamX]), max([eigVals[1] * width * 2, diamY]));
 
     currAngle += angleVel;
     pop();
