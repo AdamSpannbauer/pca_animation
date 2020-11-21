@@ -58,7 +58,12 @@ function covarianceMatrix2d(X) {
 
   const covXX = covariance(x, x);
   const covYY = covariance(y, y);
-  const covXY = covariance(x, y);
+  let covXY = covariance(x, y);
+
+  // Convert -0 to 0 (only really care about off diag)
+  if (abs(covXY) < 0.005) {
+    covXY = 0.00;
+  }
 
   return [[covXX, covXY], [covXY, covYY]];
 }
