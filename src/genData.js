@@ -1,4 +1,8 @@
-function genData2d(nRows, minVal, maxVal) {
+function genData2d() {
+  const nRows = 10;
+  const minVal = -1;
+  const maxVal = 1;
+
   const xMeanLow = -random(minVal, 0);
   const xMeanHi = -random(0, maxVal);
   const xStd = random(maxVal / 15, maxVal / 2);

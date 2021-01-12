@@ -1,17 +1,4 @@
-const viridisPallete10 = [
-  '#440154',
-  '#461d6d',
-  '#433880',
-  '#3b518b',
-  '#31678d',
-  '#287c8e',
-  '#21918d',
-  '#25a584',
-  '#3cb875',
-  '#61c960',
-];
-
-function plot2d(X) {
+function plot2d(X, pallete) {
   push();
   const windowScale = 1.5;
   let i = 0;
@@ -20,7 +7,7 @@ function plot2d(X) {
     x = map(x, -windowScale, windowScale, -width / 2, width / 2);
     y = map(y, -windowScale, windowScale, -height / 2, height / 2);
 
-    const ci = viridisPallete10[i];
+    const ci = pallete[i];
     fill(ci);
     noStroke(0);
     ellipse(x, y, 20, 20);
