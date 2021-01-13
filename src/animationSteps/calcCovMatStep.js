@@ -2,12 +2,22 @@
 import displayUtils from '../utils/displayUtils.js';
 import plotUtils from '../utils/plotUtils.js';
 
-// TODO: add zoom out to corner effect to start animation step
 // TODO: time release/progressively display info instead of all at once
+
+function zoomOutPlot({
+  centeredData, t, palette, zoomFrames = 100,
+}) {
+  const scl = map(t, 0, zoomFrames, 1, 0.5, true);
+  scale(scl, scl);
+  translate(-width * (1 - scl), height * (1 - scl));
+
+  plotUtils.drawAxes();
+  plotUtils.plot2d(centeredData, palette);
+}
 
 export default function calcCovMatStep({
   centeredData, covarianceMatrix, palette,
-  dataTableFontSize = 15,
+  t, zoomFrames = 100, dataTableFontSize = 15,
   dataTableX = null, dataTableY = null,
 }) {
   if (dataTableX === null) {
@@ -21,11 +31,14 @@ export default function calcCovMatStep({
   }
 
   push();
-  scale(0.5, 0.5);
-  translate(-width / 2, height / 2);
+  zoomOutPlot({
+    centeredData, t, palette, zoomFrames,
+  });
 
-  plotUtils.drawAxes();
-  plotUtils.plot2d(centeredData, palette);
+  if (t <= zoomFrames) {
+    const isOver = false;
+    return isOver;
+  }
 
   strokeWeight(10);
   stroke(palette[palette.length - 3]);

@@ -5,9 +5,21 @@ import plotUtils from '../utils/plotUtils.js';
 // TODO: add zoom in out of corner effect to end animation step
 // TODO: time release/progressively display info instead of all at once
 
+// function zoomInPlot({
+//   centeredData, t, palette, zoomFrames = 100,
+// }) {
+//   const scl = map(t, 0, zoomFrames, 0.5, 1, true);
+//   scale(scl, scl);
+//   translate(-width * (1 - scl), height * (1 - scl));
+
+//   plotUtils.drawAxes();
+//   plotUtils.plot2d(centeredData, palette);
+// }
+
 export default function eigenDecompStep({
   centeredData, covarianceMatrix,
   eigVals, projectionMatrix,
+  t, zoomFrames = 100,
   palette, dataTableFontSize = 15,
   dataTableX = null, dataTableY = null,
 }) {

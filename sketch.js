@@ -157,17 +157,20 @@ function draw() {
     if (stepIsOver) {
       state = 'calculate_cov_mat';
       currAngle = deltaAngle;
+      t = 0;
       if (pauseAfterStepCheckbox.checked()) playPause();
     }
   } else if (state === 'calculate_cov_mat') {
     const stepIsOver = calcCovMatStep({
       centeredData,
       covarianceMatrix,
+      t,
       palette: viridisPalette10,
       dataTableFontSize,
       dataTableX,
       dataTableY,
     });
+    t += 1;
 
     if (stepIsOver) {
       state = 'eigen';
