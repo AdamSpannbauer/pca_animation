@@ -7,6 +7,8 @@ import calcCovMatStep from './src/animationSteps/calcCovMatStep.js';
 import eigenDecompStep from './src/animationSteps/eigenDecompStep.js';
 import rotatingStep from './src/animationSteps/rotatingStep.js';
 import projectedDataStep from './src/animationSteps/projectedDataStep.js';
+import plotUtils from './src/utils/plotUtils.js';
+import displayUtils from './src/utils/displayUtils.js';
 
 const canvasW = 512;
 const canvasH = 512;
@@ -44,7 +46,7 @@ let dataTableX;
 let dataTableY;
 const dataTableFontSize = 15;
 
-let state = 'centering';
+let state = 'init';
 
 const viridisPalette10 = [
   '#440154',
@@ -61,9 +63,7 @@ const viridisPalette10 = [
 
 function restart() {
   t = 0;
-  state = 'centering';
-  playPauseBtn.html('Pause');
-  loop();
+  state = 'init';
 
   [data, centeredData] = genData2d();
   covarianceMatrix = matUtils.covarianceMatrix2d(centeredData);
@@ -93,14 +93,19 @@ function restart() {
   currAngle = deltaAngle;
 
   projectedData = matUtils.matMul(centeredData, projectionMatrix);
+
+  playPauseBtn.html('Pause');
+  loop();
 }
 
 function playPause() {
   if (playPauseBtn.html() === 'Pause') {
     playPauseBtn.html('Play');
+    playPauseBtn.center('horizontal');
     noLoop();
   } else {
     playPauseBtn.html('Pause');
+    playPauseBtn.center('horizontal');
     loop();
   }
 }
@@ -109,8 +114,21 @@ function preload() {
   myFont = loadFont(myFontPath);
 }
 
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight);
+
+  playPauseBtn.position(0, height - 80);
+  playPauseBtn.center('horizontal');
+
+  restartBtn.position(0, height - 30);
+  restartBtn.center('horizontal');
+
+  pauseAfterStepCheckbox.position(0, height - 55);
+  pauseAfterStepCheckbox.center('horizontal');
+}
+
 function setup() {
-  createCanvas(canvasW, canvasH);
+  createCanvas(windowWidth, windowHeight);
   textFont(myFont);
 
   dataTableX = -width / 2;
@@ -119,13 +137,20 @@ function setup() {
   // eslint-disable-next-line no-undef
   playPauseBtn = createButton('Pause');
   playPauseBtn.mousePressed(playPause);
+  playPauseBtn.position(0, height - 80);
+  playPauseBtn.center('horizontal');
 
   // eslint-disable-next-line no-undef
   restartBtn = createButton('Restart');
   restartBtn.mousePressed(restart);
+  restartBtn.position(0, height - 30);
+  restartBtn.center('horizontal');
 
   // eslint-disable-next-line no-undef
   pauseAfterStepCheckbox = createCheckbox('Pause after each step', true);
+  pauseAfterStepCheckbox.style('background-color', color(255, 150));
+  pauseAfterStepCheckbox.position(0, height - 55);
+  pauseAfterStepCheckbox.center('horizontal');
 
   restart();
 }
@@ -141,8 +166,16 @@ function draw() {
 
   textSize(30);
   fill(255, 100);
+  if (state === 'init') {
+    plotUtils.drawAxes();
+    plotUtils.plot2d(data, viridisPalette10);
 
-  if (state === 'centering') {
+    displayUtils.labelStep('Input data');
+
+    state = 'centering';
+    t = 0;
+    if (pauseAfterStepCheckbox.checked()) playPause();
+  } else if (state === 'centering') {
     const stepIsOver = centeringStep({
       data,
       centeredData,
@@ -153,6 +186,8 @@ function draw() {
       dataTableX,
       dataTableY,
     });
+
+    plotUtils.plot2d(data, viridisPalette10, 20);
 
     if (stepIsOver) {
       state = 'calculate_cov_mat';
@@ -170,7 +205,6 @@ function draw() {
       dataTableX,
       dataTableY,
     });
-    t += 1;
 
     if (stepIsOver) {
       state = 'eigen';
@@ -190,6 +224,7 @@ function draw() {
 
     if (stepIsOver) {
       state = 'rotating';
+      t = 0;
       if (pauseAfterStepCheckbox.checked()) playPause();
     }
   } else if (state === 'rotating') {
@@ -198,6 +233,7 @@ function draw() {
       projectedData,
       eigVals,
       currAngle,
+      t,
       angleVel,
       palette: viridisPalette10,
       dataTableX,
@@ -218,3 +254,4 @@ function draw() {
 window.setup = setup;
 window.draw = draw;
 window.preload = preload;
+window.windowResized = windowResized;

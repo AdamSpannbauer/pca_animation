@@ -3,22 +3,15 @@ import displayUtils from '../utils/displayUtils.js';
 import plotUtils from '../utils/plotUtils.js';
 import matUtils from '../utils/matUtils.js';
 
-export default function rotatingStep({
-  projectedData, eigVals,
-  currAngle, angleVel,
-  palette, dataTableFontSize = 15,
-  dataTableX = null, dataTableY = null,
+function zoomInPlot({
+  dataStep, eigVals, currAngle, t, palette, zoomFrames = 50,
 }) {
   push();
+  const scl = map(t, 0, zoomFrames, 0.5, 1, true);
+  scale(scl, scl);
+  translate(-width * (1 - scl), height * (1 - scl));
+
   plotUtils.drawAxes();
-
-  const rotMat = [
-    [cos(-currAngle), -sin(-currAngle)],
-    [sin(-currAngle), cos(-currAngle)],
-  ];
-
-  const dataStep = matUtils.matMul(projectedData, rotMat);
-
   plotUtils.plot2d(dataStep, palette);
 
   noFill();
@@ -30,12 +23,32 @@ export default function rotatingStep({
 
   stroke(palette[palette.length - 3]);
   line(0, 0, eigVals[0] * width, 0);
-
-  // strokeWeight(3);
-  // stroke('#fde7254D');
-  // ellipse(0, 0, eigVals[0] * width * 2, eigVals[1] * width * 2);
-
   pop();
+}
+
+export default function rotatingStep({
+  projectedData, eigVals,
+  currAngle, angleVel,
+  t, zoomFrames = 50,
+  palette, dataTableFontSize = 15,
+  dataTableX = null, dataTableY = null,
+}) {
+  push();
+
+  const rotMat = [
+    [cos(-currAngle), -sin(-currAngle)],
+    [sin(-currAngle), cos(-currAngle)],
+  ];
+
+  const dataStep = matUtils.matMul(projectedData, rotMat);
+
+  zoomInPlot({
+    dataStep, eigVals, currAngle, t, palette, zoomFrames,
+  });
+
+  if (t <= zoomFrames) {
+    return [false, currAngle];
+  }
 
   push();
   scale(1, -1);

@@ -1,4 +1,6 @@
-function plot2d(X, pallete) {
+function plot2d(X, pallete, alpha) {
+  const a = alpha || 255;
+
   push();
   const windowScale = 1.5;
   let i = 0;
@@ -7,7 +9,8 @@ function plot2d(X, pallete) {
     x = map(x, -windowScale, windowScale, -width / 2, width / 2);
     y = map(y, -windowScale, windowScale, -height / 2, height / 2);
 
-    const ci = pallete[i];
+    const ci = color(pallete[i]);
+    ci.setAlpha(a);
     fill(ci);
     noStroke(0);
     ellipse(x, y, 20, 20);
