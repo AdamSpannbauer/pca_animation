@@ -10,8 +10,8 @@ import projectedDataStep from './src/animationSteps/projectedDataStep.js';
 import plotUtils from './src/utils/plotUtils.js';
 import displayUtils from './src/utils/displayUtils.js';
 
-const canvasW = 512;
-const canvasH = 512;
+const canvasW = 600;
+const canvasH = 600;
 
 // dang globalists
 let t;
@@ -115,20 +115,26 @@ function preload() {
 }
 
 function windowResized() {
-  resizeCanvas(windowWidth, windowHeight);
+  resizeCanvas(
+    min([windowWidth, canvasW]),
+    min([windowHeight, canvasH]),
+  );
 
-  playPauseBtn.position(0, height - 80);
+  playPauseBtn.position(0, windowHeight - 80);
   playPauseBtn.center('horizontal');
 
-  restartBtn.position(0, height - 30);
+  restartBtn.position(0, windowHeight - 30);
   restartBtn.center('horizontal');
 
-  pauseAfterStepCheckbox.position(0, height - 55);
+  pauseAfterStepCheckbox.position(0, windowHeight - 55);
   pauseAfterStepCheckbox.center('horizontal');
 }
 
 function setup() {
-  createCanvas(windowWidth, windowHeight);
+  createCanvas(
+    min([windowWidth, canvasW]),
+    min([windowHeight, canvasH]),
+  );
   textFont(myFont);
 
   dataTableX = -width / 2;
@@ -137,19 +143,19 @@ function setup() {
   // eslint-disable-next-line no-undef
   playPauseBtn = createButton('Pause');
   playPauseBtn.mousePressed(playPause);
-  playPauseBtn.position(0, height - 80);
+  playPauseBtn.position(0, windowHeight - 80);
   playPauseBtn.center('horizontal');
 
   // eslint-disable-next-line no-undef
   restartBtn = createButton('Restart');
   restartBtn.mousePressed(restart);
-  restartBtn.position(0, height - 30);
+  restartBtn.position(0, windowHeight - 30);
   restartBtn.center('horizontal');
 
   // eslint-disable-next-line no-undef
   pauseAfterStepCheckbox = createCheckbox('Pause after each step', true);
   pauseAfterStepCheckbox.style('background-color', color(255, 150));
-  pauseAfterStepCheckbox.position(0, height - 55);
+  pauseAfterStepCheckbox.position(0, windowHeight - 55);
   pauseAfterStepCheckbox.center('horizontal');
 
   restart();
