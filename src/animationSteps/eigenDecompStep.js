@@ -2,24 +2,11 @@
 import displayUtils from '../utils/displayUtils.js';
 import plotUtils from '../utils/plotUtils.js';
 
-// TODO: add zoom in out of corner effect to end animation step
 // TODO: time release/progressively display info instead of all at once
-
-// function zoomInPlot({
-//   centeredData, t, palette, zoomFrames = 100,
-// }) {
-//   const scl = map(t, 0, zoomFrames, 0.5, 1, true);
-//   scale(scl, scl);
-//   translate(-width * (1 - scl), height * (1 - scl));
-
-//   plotUtils.drawAxes();
-//   plotUtils.plot2d(centeredData, palette);
-// }
 
 export default function eigenDecompStep({
   centeredData, covarianceMatrix,
   eigVals, projectionMatrix,
-  t, zoomFrames = 100,
   palette, dataTableFontSize = 15,
   dataTableX = null, dataTableY = null,
 }) {
@@ -82,8 +69,8 @@ export default function eigenDecompStep({
   textSize(dataTableFontSize);
   fill(0);
   noStroke();
-  text(`total variance = Sum(Eigenvalues) = ${eigVals[0].toFixed(2)} + ${eigVals[1].toFixed(2)} = ~${(eigVals[0] + eigVals[1]).toFixed(2)}`, -width / 2 + textSize(), height / 2 - textSize() * 2.4);
-  text(`total variance = Var(x) + Var(y) = ${covarianceMatrix[0][0].toFixed(2)} + ${covarianceMatrix[1][1].toFixed(2)} = ~${(covarianceMatrix[0][0] + covarianceMatrix[1][1]).toFixed(2)}`, -width / 2 + textSize(), height / 2 - textSize() * 1.1);
+  text(`total variance = Var(x) + Var(y) = ${covarianceMatrix[0][0].toFixed(2)} + ${covarianceMatrix[1][1].toFixed(2)} = ~${(covarianceMatrix[0][0] + covarianceMatrix[1][1]).toFixed(2)}`, dataTableX + textSize() * 7, dataTableY + textSize() * 11);
+  text(`total variance = Sum(Eigenvalues) = ${eigVals[0].toFixed(2)} + ${eigVals[1].toFixed(2)} = ~${(eigVals[0] + eigVals[1]).toFixed(2)}`, dataTableX + textSize() * 7, dataTableY + textSize() * 12.2);
   fill(255, 100);
   pop();
   displayUtils.labelStep('Find the eigenvectors of the \ncovariance matrix');
