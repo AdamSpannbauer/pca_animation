@@ -10,8 +10,6 @@ export default function eigenDecompStep({
   palette, dataTableFontSize = 15,
   dataTableX = null, dataTableY = null,
 }) {
-  displayUtils.labelStep('Find the eigenvectors of the \ncovariance matrix');
-
   push();
   scale(0.5, 0.5);
   translate(-width / 2, height / 2);
@@ -99,6 +97,8 @@ export default function eigenDecompStep({
   text(`total variance = Var(x) + Var(y) = ${covarianceMatrix[0][0].toFixed(2)} + ${covarianceMatrix[1][1].toFixed(2)} = ~${(covarianceMatrix[0][0] + covarianceMatrix[1][1]).toFixed(2)}`, dataTableX + textSize() * 6, dataTableY + textSize() * 11);
   pop();
 
-  const isOver = t > 200;
+  displayUtils.labelStep('Find the eigenvectors of the \ncovariance matrix');
+
+  const isOver = t > 170;
   return isOver;
 }

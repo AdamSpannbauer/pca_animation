@@ -46,7 +46,12 @@ let dataTableX;
 let dataTableY;
 const dataTableFontSize = 15;
 
-let state = 'init';
+let state = 0;
+const steps = [
+  'init',
+  'centering', 'calculate_cov_mat',
+  'eigen', 'rotating', 'projected_data',
+];
 
 const viridisPalette10 = [
   '#440154',
@@ -63,7 +68,7 @@ const viridisPalette10 = [
 
 function restart() {
   t = 0;
-  state = 'init';
+  state = 0;
 
   [data, centeredData] = genData2d();
   covarianceMatrix = matUtils.covarianceMatrix2d(centeredData);
@@ -112,6 +117,33 @@ function playPause() {
 
 function preload() {
   myFont = loadFont(myFontPath);
+}
+
+function keyPressed() {
+  if (keyCode === 32) {
+    playPause();
+  } else if (key === 'r') {
+    restart();
+  } else if (keyCode === LEFT_ARROW) {
+    if (t <= 120) {
+      state -= 1;
+    }
+    t = 0;
+    playPauseBtn.html('Pause');
+    playPauseBtn.center('horizontal');
+    loop();
+  } else if (keyCode === RIGHT_ARROW) {
+    if (t !== 0) {
+      state += 1;
+    }
+    t = 0;
+
+    playPauseBtn.html('Pause');
+    playPauseBtn.center('horizontal');
+    loop();
+  }
+
+  state = constrain(state, 0, steps.length - 1);
 }
 
 function windowResized() {
@@ -163,6 +195,7 @@ function setup() {
 
 function draw() {
   background(200);
+
   t += 1;
 
   // origin at middle
@@ -172,7 +205,7 @@ function draw() {
 
   textSize(30);
   fill(255, 100);
-  if (state === 'init') {
+  if (steps[state] === 'init') {
     plotUtils.drawAxes();
     plotUtils.plot2d(data, viridisPalette10);
 
@@ -183,11 +216,12 @@ function draw() {
     pop();
 
     displayUtils.labelStep('Input data');
+    displayUtils.addControls();
 
-    state = 'centering';
+    state += 1;
     t = 0;
     if (pauseAfterStepCheckbox.checked()) playPause();
-  } else if (state === 'centering') {
+  } else if (steps[state] === 'centering') {
     const stepIsOver = centeringStep({
       data,
       centeredData,
@@ -200,14 +234,15 @@ function draw() {
     });
 
     plotUtils.plot2d(data, viridisPalette10, 20);
+    displayUtils.addControls();
 
     if (stepIsOver) {
-      state = 'calculate_cov_mat';
+      state += 1;
       currAngle = deltaAngle;
       t = 0;
       if (pauseAfterStepCheckbox.checked()) playPause();
     }
-  } else if (state === 'calculate_cov_mat') {
+  } else if (steps[state] === 'calculate_cov_mat') {
     const stepIsOver = calcCovMatStep({
       centeredData,
       covarianceMatrix,
@@ -217,13 +252,14 @@ function draw() {
       dataTableX,
       dataTableY,
     });
+    displayUtils.addControls();
 
     if (stepIsOver) {
-      state = 'eigen';
+      state += 1;
       t = 0;
       if (pauseAfterStepCheckbox.checked()) playPause();
     }
-  } else if (state === 'eigen') {
+  } else if (steps[state] === 'eigen') {
     const stepIsOver = eigenDecompStep({
       centeredData,
       covarianceMatrix,
@@ -235,13 +271,14 @@ function draw() {
       dataTableX,
       dataTableY,
     });
+    displayUtils.addControls();
 
     if (stepIsOver) {
-      state = 'rotating';
+      state += 1;
       t = 0;
       if (pauseAfterStepCheckbox.checked()) playPause();
     }
-  } else if (state === 'rotating') {
+  } else if (steps[state] === 'rotating') {
     let stepIsOver;
     [stepIsOver, currAngle] = rotatingStep({
       projectedData,
@@ -253,13 +290,15 @@ function draw() {
       dataTableX,
       dataTableY,
     });
+    displayUtils.addControls();
 
     if (stepIsOver) {
-      state = 'projected_data';
+      state += 1;
       if (pauseAfterStepCheckbox.checked()) playPause();
     }
-  } else if (state === 'projected_data') {
+  } else if (steps[state] === 'projected_data') {
     projectedDataStep({ projectedData, palette: viridisPalette10 });
+    displayUtils.addControls();
   }
 
   fill(255);
@@ -269,3 +308,4 @@ window.setup = setup;
 window.draw = draw;
 window.preload = preload;
 window.windowResized = windowResized;
+window.keyPressed = keyPressed;

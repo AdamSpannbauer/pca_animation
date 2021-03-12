@@ -7,6 +7,32 @@ function labelStep(txt) {
   pop();
 }
 
+function addControls() {
+  push();
+  scale(1, -1);
+  translate(-width / 2, -height / 2);
+
+  textAlign(CENTER, CENTER);
+  textFont('monospace');
+  textSize(15);
+
+  const txt = 'use <- & -> keys to jump back & forwards';
+  const x = width / 2;
+  const y = height - textSize();
+  const w = textWidth(txt) * 1.1;
+  const h = textSize() * 1.3;
+
+  noStroke();
+  fill(200, 200);
+  rectMode(CENTER);
+  rect(x, y, w, h);
+  rectMode(CORNER);
+
+  fill(100);
+  text(txt, x, y);
+  pop();
+}
+
 function displayTable2d(tbl, x, y, pallete) {
   push();
   const vGap = textSize() * 1.5;
@@ -51,4 +77,4 @@ function displayTable2d(tbl, x, y, pallete) {
   pop();
 }
 
-export default { displayTable2d, labelStep };
+export default { displayTable2d, labelStep, addControls };

@@ -1,3 +1,8 @@
+@font-face {
+  font-family: mostlyMono;
+  src: url(assets/MostlyMono.ttf);
+}
+
 html,
 body {
   height: 100%;
@@ -13,4 +18,9 @@ body {
 
   /* This centers our sketch vertically. */
   align-items: center;
+}
+
+button,
+label {
+  font-family: monospace;
 }

@@ -56,8 +56,6 @@ export default function calcCovMatStep({
   }
   pop();
 
-  displayUtils.labelStep('Calculate covariance matrix');
-
   push();
   scale(1, -1);
 
@@ -122,7 +120,7 @@ export default function calcCovMatStep({
     );
   }
 
-  if (t > zoomFrames + 300) {
+  if (t > zoomFrames + 275) {
     textSize(dataTableFontSize * 1.1);
     fill(150);
     text(`total variance = Var(x) + Var(y) = ${covarianceMatrix[0][0].toFixed(2)} + ${covarianceMatrix[1][1].toFixed(2)} = ~${(covarianceMatrix[0][0] + covarianceMatrix[1][1]).toFixed(2)}`, dataTableX + textSize() * 6, dataTableY + textSize() * 11);
@@ -131,6 +129,8 @@ export default function calcCovMatStep({
 
   pop();
 
-  const isOver = t > zoomFrames + 350;
+  displayUtils.labelStep('Calculate covariance matrix');
+
+  const isOver = t > zoomFrames + 320;
   return isOver;
 }
