@@ -1,3 +1,16 @@
+function warnScreenTooSmall() {
+  push();
+  translate(width / 2, height / 2);
+  textFont('monospace');
+  textSize(20);
+  textAlign(CENTER, CENTER);
+
+  fill(0);
+
+  text('Screen\nis too\nsmall.\n\nTry on\ndesktop.', 0, 0);
+  pop();
+}
+
 function labelStep(txt) {
   push();
   scale(1, -1);
@@ -18,7 +31,7 @@ function addControls() {
 
   const txt = 'use <- & -> keys to jump back & forwards';
   const x = width / 2;
-  const y = height - textSize();
+  const y = height - textSize() * 1.5;
   const w = textWidth(txt) * 1.1;
   const h = textSize() * 1.3;
 
@@ -77,4 +90,6 @@ function displayTable2d(tbl, x, y, pallete) {
   pop();
 }
 
-export default { displayTable2d, labelStep, addControls };
+export default {
+  displayTable2d, labelStep, addControls, warnScreenTooSmall,
+};

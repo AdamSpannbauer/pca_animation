@@ -13,6 +13,8 @@ import displayUtils from './src/utils/displayUtils.js';
 const canvasW = 600;
 const canvasH = 600;
 
+let screenTooNarrow = false;
+
 // dang globalists
 let t;
 
@@ -147,10 +149,16 @@ function keyPressed() {
 }
 
 function windowResized() {
-  resizeCanvas(
-    min([windowWidth, canvasW]),
-    min([windowHeight, canvasH]),
-  );
+  if (windowWidth < canvasW || windowHeight < (canvasH + 100)) {
+    screenTooNarrow = true;
+
+    displayUtils.warnScreenTooSmall();
+    playPauseBtn.html('Pause');
+    playPauseBtn.center('horizontal');
+    loop();
+  } else {
+    screenTooNarrow = false;
+  }
 
   playPauseBtn.position(0, windowHeight - 80);
   playPauseBtn.center('horizontal');
@@ -163,10 +171,13 @@ function windowResized() {
 }
 
 function setup() {
-  createCanvas(
-    min([windowWidth, canvasW]),
-    min([windowHeight, canvasH]),
-  );
+  if (windowWidth < canvasW || windowHeight < (canvasH + 100)) {
+    screenTooNarrow = true;
+  } else {
+    screenTooNarrow = false;
+  }
+
+  createCanvas(canvasW, canvasH);
   textFont(myFont);
 
   dataTableX = -width / 2;
@@ -195,6 +206,10 @@ function setup() {
 
 function draw() {
   background(200);
+  if (screenTooNarrow) {
+    displayUtils.warnScreenTooSmall();
+    return;
+  }
 
   t += 1;
 
