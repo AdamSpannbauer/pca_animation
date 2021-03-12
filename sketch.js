@@ -131,6 +131,8 @@ function keyPressed() {
       state -= 1;
     }
     t = 0;
+    currAngle = deltaAngle;
+
     playPauseBtn.html('Pause');
     playPauseBtn.center('horizontal');
     loop();
@@ -139,6 +141,7 @@ function keyPressed() {
       state += 1;
     }
     t = 0;
+    currAngle = deltaAngle;
 
     playPauseBtn.html('Pause');
     playPauseBtn.center('horizontal');
