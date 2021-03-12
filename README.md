@@ -1,4 +1,4 @@
-# [PCA Animation](adamspannbauer.github.io/pca_animation/)
+# [PCA Animation](https://adamspannbauer.github.io/pca_animation/)
 
 ^click link to jump to app
 
