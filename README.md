@@ -11,14 +11,16 @@ An interactive animation of the [Principal Components Analysis](https://stats.st
 
 ### DON'T LOOK AT THE CODE!
 
+Please don't look into the code and expect anything but unreadable spaghetti 🍝
+
 This project's code is a combination of laziness and a bunch of badly taken shortcuts.
 To be honest, it's amazing it runs at all and looks half decent.
 I know it's bad code, and at the time of writing this... I don't think I plan to fix it....
-Please don't look into the code and expect anything but unreadable spaghetti 🍝
 
 ### DON'T LEARN FROM THE CODE!
 
+Please don't look into the code and expect anything but unreadable spaghetti 🍝
+
 This project's code is a combination of laziness and a bunch of badly taken shortcuts.
 To be honest, it's amazing it runs at all and looks half decent.
 I know it's bad code, and at the time of writing this... I don't think I plan to fix it....
-Please don't look into the code and expect anything but unreadable spaghetti 🍝
