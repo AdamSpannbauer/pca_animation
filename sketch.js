@@ -176,6 +176,12 @@ function draw() {
     plotUtils.drawAxes();
     plotUtils.plot2d(data, viridisPalette10);
 
+    push();
+    scale(1, -1);
+    textSize(dataTableFontSize);
+    displayUtils.displayTable2d(data, dataTableX, dataTableY, viridisPalette10);
+    pop();
+
     displayUtils.labelStep('Input data');
 
     state = 'centering';

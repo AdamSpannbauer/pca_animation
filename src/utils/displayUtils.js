@@ -11,7 +11,11 @@ function displayTable2d(tbl, x, y, pallete) {
   push();
   const vGap = textSize() * 1.5;
   let [[wStr]] = tbl;
-  if (typeof (wStr) !== 'string') {
+  if (typeof (wStr) !== 'string' || wStr === '') {
+    wStr = '00.00';
+  }
+
+  if (wStr.length < 5) {
     wStr = '00.00';
   }
   const hGap = textWidth(wStr) + textSize() * 1.1;
