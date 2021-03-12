@@ -1,6 +1,8 @@
-# PCA Animation
+# [PCA Animation](adamspannbauer.github.io/pca_animation/)
 
-An interactive animation of the Principal Components Analysis process for 2d data.
+^click link to jump to app
+
+An interactive animation of the [Principal Components Analysis](https://stats.stackexchange.com/a/140579/102646) process for 2d data.
 
 - Data is randomly generated on page load or when restart button is pressed.
 - Left/right arrows can be used to jump back/forward respectively
