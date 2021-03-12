@@ -131,6 +131,6 @@ export default function calcCovMatStep({
 
   pop();
 
-  const isOver = t > zoomFrames + 340;
+  const isOver = t > zoomFrames + 350;
   return isOver;
 }

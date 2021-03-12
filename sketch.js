@@ -220,6 +220,7 @@ function draw() {
 
     if (stepIsOver) {
       state = 'eigen';
+      t = 0;
       if (pauseAfterStepCheckbox.checked()) playPause();
     }
   } else if (state === 'eigen') {
@@ -227,6 +228,7 @@ function draw() {
       centeredData,
       covarianceMatrix,
       eigVals,
+      t,
       projectionMatrix,
       palette: viridisPalette10,
       dataTableFontSize,
