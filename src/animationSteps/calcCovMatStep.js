@@ -122,7 +122,7 @@ export default function calcCovMatStep({
 
   if (t > zoomFrames + 275) {
     textSize(dataTableFontSize * 1.1);
-    fill(150);
+    fill(0);
     text(`total variance = Var(x) + Var(y) = ${covarianceMatrix[0][0].toFixed(2)} + ${covarianceMatrix[1][1].toFixed(2)} = ~${(covarianceMatrix[0][0] + covarianceMatrix[1][1]).toFixed(2)}`, dataTableX + textSize() * 6, dataTableY + textSize() * 11);
     fill(255, 100);
   }

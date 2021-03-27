@@ -86,17 +86,17 @@ export default function eigenDecompStep({
     }
   }
 
-  fill(150);
+  fill(0);
   textSize(dataTableFontSize * 1.1);
   stroke(0);
   if (t > 150) {
-    fill(150);
     text(`total variance = Sum(Eigenvalues) = ${eigVals[0].toFixed(2)} + ${eigVals[1].toFixed(2)} = ~${(eigVals[0] + eigVals[1]).toFixed(2)}`, dataTableX + textSize() * 6, dataTableY + textSize() * 12.2);
   }
 
   text(`total variance = Var(x) + Var(y) = ${covarianceMatrix[0][0].toFixed(2)} + ${covarianceMatrix[1][1].toFixed(2)} = ~${(covarianceMatrix[0][0] + covarianceMatrix[1][1]).toFixed(2)}`, dataTableX + textSize() * 6, dataTableY + textSize() * 11);
   pop();
 
+  fill(150);
   displayUtils.labelStep('Find the eigenvectors of the \ncovariance matrix');
 
   const isOver = t > 170;

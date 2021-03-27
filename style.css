@@ -20,7 +20,21 @@ body {
   align-items: center;
 }
 
-button,
-label {
+div {
   font-family: monospace;
+  font-size: 10;
+  text-align: center;
+}
+
+button {
+  font-family: monospace;
+  display: block;
+  margin: 2px auto;
+}
+
+label,
+input {
+  font-family: monospace;
+  vertical-align: middle;
+  padding: 2px;
 }

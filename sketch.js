@@ -13,6 +13,9 @@ import displayUtils from './src/utils/displayUtils.js';
 const canvasW = 600;
 const canvasH = 600;
 
+const minCanvasW = 500;
+const minCanvasH = minCanvasW + 50;
+
 let screenTooNarrow = false;
 
 // dang globalists
@@ -37,6 +40,8 @@ const angleSpeed = Math.PI / 1000;
 let angleVel;
 
 // UI elements
+let controlsDiv;
+let controlsP;
 let playPauseBtn;
 let restartBtn;
 let pauseAfterStepCheckbox;
@@ -108,11 +113,9 @@ function restart() {
 function playPause() {
   if (playPauseBtn.html() === 'Pause') {
     playPauseBtn.html('Play');
-    playPauseBtn.center('horizontal');
     noLoop();
   } else {
     playPauseBtn.html('Pause');
-    playPauseBtn.center('horizontal');
     loop();
   }
 }
@@ -134,7 +137,6 @@ function keyPressed() {
     currAngle = deltaAngle;
 
     playPauseBtn.html('Pause');
-    playPauseBtn.center('horizontal');
     loop();
   } else if (keyCode === RIGHT_ARROW) {
     if (t !== 0) {
@@ -144,7 +146,6 @@ function keyPressed() {
     currAngle = deltaAngle;
 
     playPauseBtn.html('Pause');
-    playPauseBtn.center('horizontal');
     loop();
   }
 
@@ -152,25 +153,23 @@ function keyPressed() {
 }
 
 function windowResized() {
-  if (windowWidth < canvasW || windowHeight < (canvasH + 100)) {
+  if (windowWidth < minCanvasW || windowHeight < minCanvasH) {
     screenTooNarrow = true;
 
-    displayUtils.warnScreenTooSmall();
     playPauseBtn.html('Pause');
-    playPauseBtn.center('horizontal');
+    displayUtils.warnScreenTooSmall();
     loop();
   } else {
+    if (screenTooNarrow) restart();
+
     screenTooNarrow = false;
+    resizeCanvas(
+      min([windowWidth, canvasW]),
+      min([windowHeight, canvasW]),
+    );
+    controlsDiv.position(0, windowHeight - 115);
+    controlsDiv.center('horizontal');
   }
-
-  playPauseBtn.position(0, windowHeight - 80);
-  playPauseBtn.center('horizontal');
-
-  restartBtn.position(0, windowHeight - 30);
-  restartBtn.center('horizontal');
-
-  pauseAfterStepCheckbox.position(0, windowHeight - 55);
-  pauseAfterStepCheckbox.center('horizontal');
 }
 
 function setup() {
@@ -178,31 +177,45 @@ function setup() {
     screenTooNarrow = true;
   } else {
     screenTooNarrow = false;
+    createCanvas(
+      min([windowWidth, canvasW]),
+      min([windowHeight, canvasW]),
+    );
   }
 
-  createCanvas(canvasW, canvasH);
   textFont(myFont);
 
   dataTableX = -width / 2;
   dataTableY = dataTableFontSize * 2;
 
   // eslint-disable-next-line no-undef
+  controlsDiv = createDiv();
+
+  // eslint-disable-next-line no-undef
+  controlsP = createP('use <- & -> keys to jump back & forwards');
+  controlsP.parent(controlsDiv);
+  controlsP.style('font-family', 'monospace');
+  controlsP.style('font-size', 10);
+
+  // eslint-disable-next-line no-undef
   playPauseBtn = createButton('Pause');
   playPauseBtn.mousePressed(playPause);
-  playPauseBtn.position(0, windowHeight - 80);
-  playPauseBtn.center('horizontal');
+  playPauseBtn.parent(controlsDiv);
 
   // eslint-disable-next-line no-undef
   restartBtn = createButton('Restart');
   restartBtn.mousePressed(restart);
-  restartBtn.position(0, windowHeight - 30);
-  restartBtn.center('horizontal');
+  restartBtn.parent(controlsDiv);
 
   // eslint-disable-next-line no-undef
   pauseAfterStepCheckbox = createCheckbox('Pause after each step', true);
   pauseAfterStepCheckbox.style('background-color', color(255, 150));
-  pauseAfterStepCheckbox.position(0, windowHeight - 55);
-  pauseAfterStepCheckbox.center('horizontal');
+  pauseAfterStepCheckbox.style('display', 'inline-block');
+  pauseAfterStepCheckbox.parent(controlsDiv);
+
+  controlsDiv.position(0, windowHeight - 115);
+  controlsDiv.center('horizontal');
+  controlsDiv.id('controls');
 
   restart();
 }
@@ -234,7 +247,6 @@ function draw() {
     pop();
 
     displayUtils.labelStep('Input data');
-    displayUtils.addControls();
 
     state += 1;
     t = 0;
@@ -252,7 +264,6 @@ function draw() {
     });
 
     plotUtils.plot2d(data, viridisPalette10, 20);
-    displayUtils.addControls();
 
     if (stepIsOver) {
       state += 1;
@@ -270,7 +281,6 @@ function draw() {
       dataTableX,
       dataTableY,
     });
-    displayUtils.addControls();
 
     if (stepIsOver) {
       state += 1;
@@ -289,7 +299,6 @@ function draw() {
       dataTableX,
       dataTableY,
     });
-    displayUtils.addControls();
 
     if (stepIsOver) {
       state += 1;
@@ -308,7 +317,6 @@ function draw() {
       dataTableX,
       dataTableY,
     });
-    displayUtils.addControls();
 
     if (stepIsOver) {
       state += 1;
@@ -316,7 +324,6 @@ function draw() {
     }
   } else if (steps[state] === 'projected_data') {
     projectedDataStep({ projectedData, palette: viridisPalette10 });
-    displayUtils.addControls();
   }
 
   fill(255);

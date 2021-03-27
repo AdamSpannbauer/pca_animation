@@ -7,7 +7,7 @@ function warnScreenTooSmall() {
 
   fill(0);
 
-  text('Screen\nis too\nsmall.\n\nTry on\ndesktop.', 0, 0);
+  text('Screen\nto small; try\nzooming\nout', 0, 0);
   pop();
 }
 
