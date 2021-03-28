@@ -11,10 +11,9 @@ import plotUtils from './src/utils/plotUtils.js';
 import displayUtils from './src/utils/displayUtils.js';
 
 const canvasW = 600;
-const canvasH = 600;
 
 const minCanvasW = 500;
-const minCanvasH = minCanvasW + 50;
+const minCanvasH = minCanvasW + 80;
 
 // dang globalists
 let t;
@@ -38,6 +37,7 @@ const angleSpeed = Math.PI / 1000;
 let angleVel;
 
 // UI elements
+let zoomP;
 let controlsDiv;
 let controlsP;
 let playPauseBtn;
@@ -157,20 +157,37 @@ function windowResized() {
   if (screenTooNarrow()) {
     playPauseBtn.html('Pause');
     displayUtils.warnScreenTooSmall();
+    zoomP.style('display', 'inline');
+    zoomP.position(0, 0);
+    zoomP.center('horizontal');
     loop();
   } else {
-    if (screenWasTooNarrow) restart();
+    // if (screenWasTooNarrow) restart();
     resizeCanvas(
       min([windowWidth, canvasW]),
       min([windowHeight, canvasW]),
     );
-    controlsDiv.position(0, windowHeight - 115);
+    controlsDiv.position(0, windowHeight - 75);
     controlsDiv.center('horizontal');
+    zoomP.hide();
+    playPauseBtn.html('Play');
+    noLoop();
   }
   screenWasTooNarrow = screenTooNarrow();
 }
 
 function setup() {
+  console.log(
+    'Controls: \n\
+\t* space bar to play/pause \n\
+\t* arrow keys to jump forwards/back \n\
+\t* r key to restart \n\
+\n\
+Be warned; if you\'re here to look at the code... don\'t. \n\
+The code is very admittably terrible; don\'t look at it. \n\
+Just go outside or something instead... c\'mon. \n\
+',
+  );
   createCanvas(
     min([windowWidth, canvasW]),
     min([windowHeight, canvasW]),
@@ -182,13 +199,19 @@ function setup() {
   dataTableY = dataTableFontSize * 2;
 
   // eslint-disable-next-line no-undef
+  zoomP = createP('<kbd>Ctrl</kbd>+<kbd>-</kbd> to zoom out');
+  zoomP.position(0, 0);
+  zoomP.center('horizontal');
+  zoomP.hide();
+
+  // eslint-disable-next-line no-undef
   controlsDiv = createDiv();
 
   // eslint-disable-next-line no-undef
-  controlsP = createP('use <- & -> keys to jump back & forwards');
-  controlsP.parent(controlsDiv);
-  controlsP.style('font-family', 'monospace');
-  controlsP.style('font-size', 10);
+  // controlsP = createP('use <- & -> keys to jump back & forwards');
+  // controlsP.parent(controlsDiv);
+  // controlsP.style('font-family', 'monospace');
+  // controlsP.style('font-size', 10);
 
   // eslint-disable-next-line no-undef
   playPauseBtn = createButton('Pause');
@@ -206,7 +229,7 @@ function setup() {
   pauseAfterStepCheckbox.style('display', 'inline-block');
   pauseAfterStepCheckbox.parent(controlsDiv);
 
-  controlsDiv.position(0, windowHeight - 115);
+  controlsDiv.position(0, windowHeight - 75);
   controlsDiv.center('horizontal');
   controlsDiv.id('controls');
 
@@ -217,6 +240,9 @@ function draw() {
   background(200);
   if (screenTooNarrow()) {
     displayUtils.warnScreenTooSmall();
+    zoomP.style('display', 'inline');
+    zoomP.position(0, 0);
+    zoomP.center('horizontal');
     return;
   }
 
