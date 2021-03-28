@@ -16,8 +16,6 @@ const canvasH = 600;
 const minCanvasW = 500;
 const minCanvasH = minCanvasW + 50;
 
-let screenTooNarrow = false;
-
 // dang globalists
 let t;
 
@@ -152,17 +150,16 @@ function keyPressed() {
   state = constrain(state, 0, steps.length - 1);
 }
 
-function windowResized() {
-  if (windowWidth < minCanvasW || windowHeight < minCanvasH) {
-    screenTooNarrow = true;
+const screenTooNarrow = () => windowWidth < minCanvasW || windowHeight < minCanvasH;
+let screenWasTooNarrow = true;
 
+function windowResized() {
+  if (screenTooNarrow()) {
     playPauseBtn.html('Pause');
     displayUtils.warnScreenTooSmall();
     loop();
   } else {
-    if (screenTooNarrow) restart();
-
-    screenTooNarrow = false;
+    if (screenWasTooNarrow) restart();
     resizeCanvas(
       min([windowWidth, canvasW]),
       min([windowHeight, canvasW]),
@@ -170,18 +167,14 @@ function windowResized() {
     controlsDiv.position(0, windowHeight - 115);
     controlsDiv.center('horizontal');
   }
+  screenWasTooNarrow = screenTooNarrow();
 }
 
 function setup() {
-  if (windowWidth < canvasW || windowHeight < (canvasH + 100)) {
-    screenTooNarrow = true;
-  } else {
-    screenTooNarrow = false;
-    createCanvas(
-      min([windowWidth, canvasW]),
-      min([windowHeight, canvasW]),
-    );
-  }
+  createCanvas(
+    min([windowWidth, canvasW]),
+    min([windowHeight, canvasW]),
+  );
 
   textFont(myFont);
 
@@ -222,7 +215,7 @@ function setup() {
 
 function draw() {
   background(200);
-  if (screenTooNarrow) {
+  if (screenTooNarrow()) {
     displayUtils.warnScreenTooSmall();
     return;
   }
