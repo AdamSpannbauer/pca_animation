@@ -20,6 +20,15 @@ function labelStep(txt) {
   pop();
 }
 
+function labelStepSubtitle(txt) {
+  push();
+  scale(1, -1);
+  fill(0);
+  noStroke();
+  text(txt, -width / 2 + textSize() * 0.5, -height / 2 + textSize() * 5);
+  pop();
+}
+
 function displayTable2d(tbl, x, y, pallete) {
   push();
   const vGap = textSize() * 1.5;
@@ -65,5 +74,5 @@ function displayTable2d(tbl, x, y, pallete) {
 }
 
 export default {
-  displayTable2d, labelStep, warnScreenTooSmall,
+  displayTable2d, labelStep, warnScreenTooSmall, labelStepSubtitle,
 };

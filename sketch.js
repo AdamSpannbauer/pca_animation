@@ -39,7 +39,6 @@ let angleVel;
 // UI elements
 let zoomP;
 let controlsDiv;
-let controlsP;
 let playPauseBtn;
 let restartBtn;
 let pauseAfterStepCheckbox;
@@ -151,7 +150,6 @@ function keyPressed() {
 }
 
 const screenTooNarrow = () => windowWidth < minCanvasW || windowHeight < minCanvasH;
-let screenWasTooNarrow = true;
 
 function windowResized() {
   if (screenTooNarrow()) {
@@ -162,7 +160,6 @@ function windowResized() {
     zoomP.center('horizontal');
     loop();
   } else {
-    // if (screenWasTooNarrow) restart();
     resizeCanvas(
       min([windowWidth, canvasW]),
       min([windowHeight, canvasW]),
@@ -173,7 +170,6 @@ function windowResized() {
     playPauseBtn.html('Play');
     noLoop();
   }
-  screenWasTooNarrow = screenTooNarrow();
 }
 
 function setup() {
@@ -266,6 +262,13 @@ function draw() {
     pop();
 
     displayUtils.labelStep('Input data');
+
+    push();
+    textSize(textSize() * 0.5);
+    displayUtils.labelStepSubtitle(
+      '* space bar to play/pause \n* arrow keys to jump forwards/back \n* r key to restart \n',
+    );
+    pop();
 
     state += 1;
     t = 0;
